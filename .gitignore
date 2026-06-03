@@ -1,0 +1,45 @@
+# ─── Variables d'environnement (JAMAIS sur GitHub) ───────────────────────────
+.env
+.env.*
+
+# ─── Données brutes et traitées (trop lourdes pour GitHub) ───────────────────
+data/raw/
+data/processed/features/
+data/processed/models/
+data/processed/faiss_index
+data/processed/faiss_metadata.json
+
+# ─── MLflow (logs d'expériences, trop lourd) ─────────────────────────────────
+mlflow/
+
+# ─── Environnement virtuel Python ─────────────────────────────────────────────
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ─── Jupyter ─────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ─── macOS ───────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ─── IDE ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Fichiers de build ───────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
