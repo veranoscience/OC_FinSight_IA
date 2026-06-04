@@ -1,6 +1,6 @@
 """
-Entraînement des modèles XGBoost avec walk-forward cross-validation.
-Règle absolue : jamais de train_test_split classique sur séries temporelles.
+Entraînement des modèles XGBoost avec walk-forward cross-validation
+Règle absolue : jamais de train_test_split classique sur séries temporelles
 """
 
 import logging
@@ -28,7 +28,7 @@ from src.models.evaluate import compute_metrics
 logger = logging.getLogger(__name__)
 
 
-# ─── Walk-forward cross-validation ───────────────────────────────────────────
+#  Walk-forward cross-validation 
 
 
 def walk_forward_splits(
@@ -85,7 +85,7 @@ def walk_forward_splits(
     return splits
 
 
-# ─── Entraînement XGBoost ─────────────────────────────────────────────────────
+#  Entraînement XGBoost 
 
 
 def train_trend_model(
@@ -272,7 +272,7 @@ def train_volatility_model(
     return model_final, scaler_final, wf_results
 
 
-# ─── Helpers privés ──────────────────────────────────────────────────────────
+#  Helpers  
 
 
 def _aggregate_wf_scores(wf_scores: list[dict]) -> dict[str, float]:

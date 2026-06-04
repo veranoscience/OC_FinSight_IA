@@ -86,31 +86,31 @@ L'utilisateur saisit le ticker d'une action (ex : `AAPL`, `MC.PA`, `TTE.PA`). La
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                        DATA LAYER                                │
-│  yfinance (prix, volumes)  ·  NewsAPI (articles)  ·  FRED (macro)│
+│  yfinance (prix, volumes)    NewsAPI (articles)      FRED (macro)│
 └─────────────────────────┬────────────────────────────────────────┘
-                          ↓
+                          │
 ┌──────────────────────────────────────────────────────────────────┐
 │                     ML PIPELINE                                  │
-│  Feature Engineering  →  Entraînement  →  Validation             │
+│  Feature Engineering  ->  Entraînement  ->  Validation           │
 │  • Modèle 1 : Classification tendance (XGBoost)                  │
-│    Target : ↑ hausse / → stable / ↓ baisse (à 30 jours)         │
-│  • Modèle 2 : Scoring volatilité (régression → classe risque)    │
+│    Target : ↑ hausse /  stable /  baisse (à 30 jours)            │
+│  • Modèle 2 : Scoring volatilité (régression -> classe risque)   │
 │  • SHAP : explicabilité globale (beeswarm) et locale (waterfall) │
 └─────────────────────────┬────────────────────────────────────────┘
-                          ↓
+                          │
 ┌──────────────────────────────────────────────────────────────────┐
 │                     RAG PIPELINE                                 │
-│  News financières → Chunking → Embeddings → FAISS                │
+│  News financières -> Chunking -> Embeddings -> FAISS             │
 │  (sentence-transformers + LangChain)                             │
 └─────────────────────────┬────────────────────────────────────────┘
-                          ↓
+                          │
 ┌──────────────────────────────────────────────────────────────────┐
 │                  AI AGENT (LangChain)                            │
 │  Tool 1 : Interroger les modèles ML                              │
 │  Tool 2 : Rechercher dans la base RAG (news)                     │
 │  Tool 3 : Générer un résumé de marché automatique                │
 └─────────────────────────┬────────────────────────────────────────┘
-                          ↓
+                          │
 ┌──────────────────────────────────────────────────────────────────┐
 │           DASHBOARD + CHATBOT (Streamlit)                        │
 │  Graphiques prix  ·  Prédiction tendance  ·  Score risque        │
@@ -127,13 +127,13 @@ L'utilisateur saisit le ticker d'une action (ex : `AAPL`, `MC.PA`, `TTE.PA`). La
 | News | `NewsAPI` (free tier) | Articles récents en anglais et français |
 | Feature engineering | `pandas`, `ta` (technical analysis) | RSI, MACD, Bollinger Bands |
 | Modèles ML | `XGBoost`, `scikit-learn` | Performant, compatible SHAP |
-| Explicabilité | `SHAP` | Déjà maîtrisé (Projet attrition) |
+| Explicabilité | `SHAP` | Déjà maîtrisé  |
 | Tracking expériences | `MLflow` | Bonne pratique MLOps |
-| RAG | `LangChain` + `FAISS` + `sentence-transformers` | Maîtrisé (Projet 7 et 8) |
+| RAG | `LangChain` + `FAISS` + `sentence-transformers` | Maîtrisé  |
 | LLM | `Mistral` (API) | Gratuit, multilingue |
-| Agent IA | `LangChain Agents` | Maîtrisé (Projet 8) |
+| Agent IA | `LangChain Agents` | Maîtrisé  |
 | Interface | `Streamlit` | Rapide à déployer, adapté à la data |
-| Environnement | `uv` + `pyproject.toml` | Bonne pratique (Projet 5) |
+| Environnement | `uv` + `pyproject.toml` | Maîtrisé |
 
 ---
 
@@ -155,14 +155,14 @@ L'utilisateur saisit le ticker d'une action (ex : `AAPL`, `MC.PA`, `TTE.PA`). La
 - Taux d'inflation (CPI)
 - Taux 10 ans US (proxy risque marché)
 
-**Feature NLP (optionnelle, si le temps le permet) :**
+**Feature NLP :**
 - Score de sentiment moyen sur les news des 7 derniers jours (analyse de polarité)
 
 ### 4.2 Variables cibles
 
 | Modèle | Variable cible | Type |
 |--------|---------------|------|
-| Tendance | Rendement J+30 > +3% → hausse / < -3% → baisse / sinon stable | Classification multiclasse (3 classes) |
+| Tendance | Rendement J+30 > +3% -> hausse / < -3% -> baisse / sinon stable | Classification multiclasse (3 classes) |
 | Volatilité | Volatilité réalisée J+30 discrétisée en 3 niveaux | Classification (faible / moyen / élevé) |
 
 ---
@@ -176,18 +176,11 @@ L'utilisateur saisit le ticker d'une action (ex : `AAPL`, `MC.PA`, `TTE.PA`). La
 | **Sprint 1** | Semaine 1 | Setup environnement, collecte données, EDA | Notebook EDA + données nettoyées |
 | **Sprint 2** | Semaine 2 | Feature engineering, premier modèle (baseline) | Notebook ML v1 + métriques baseline |
 | **Sprint 3** | Semaine 3 | Optimisation modèles, SHAP, validation croisée | Notebook ML final + SHAP plots |
-| **Sprint 4** | Semaine 4 | Pipeline RAG (news → embeddings → FAISS) | RAG fonctionnel + évaluation |
+| **Sprint 4** | Semaine 4 | Pipeline RAG (news -> embeddings -> FAISS) | RAG fonctionnel + évaluation |
 | **Sprint 5** | Semaine 5 | Agent IA (LangChain), intégration des outils | Agent fonctionnel |
 | **Sprint 6** | Semaine 6 | Dashboard Streamlit + chatbot + tests bout-en-bout | Application complète |
 | **Sprint 7** | Semaine 7 | Documentation, rapport, préparation soutenance | Portfolio + rapport final |
 
-### 5.2 Livrables
-
-- Notebooks Jupyter (EDA, ML, RAG)
-- Application Streamlit déployée (Streamlit Cloud)
-- Dépôt GitHub structuré avec README
-- Rapport de conduite de projet (ce document)
-- Support de présentation PDF
 
 ---
 
@@ -222,21 +215,10 @@ L'utilisateur saisit le ticker d'une action (ex : `AAPL`, `MC.PA`, `TTE.PA`). La
 | Dashboard fonctionnel pour 5 tickers différents | 100% |
 | SHAP plots générés et interprétables | 100% |
 
----
-
-## 7. Gestion des Risques
-
-| Risque | Probabilité | Impact | Mitigation |
-|--------|------------|--------|------------|
-| Données insuffisantes / API limitée | Moyenne | Haut | Utiliser plusieurs sources (yfinance + Alpha Vantage) |
-| Modèle peu performant (marchés imprévisibles) | Haute | Moyen | Cadrer les attentes dès le départ ; SHAP compense |
-| Temps RAG + agent sous-estimé | Moyenne | Haut | RAG en priorité Sprint 4, agent peut être simplifié si retard |
-| Data leakage dans les séries temporelles | Faible | Haut | Walk-forward CV obligatoire, pas de StandardScaler global |
-| Déploiement Streamlit Cloud lent | Faible | Faible | Tester localement + démo en local si besoin |
 
 ---
 
-## 8. Aspects Éthiques et Réglementaires
+## 7. Aspects Éthiques et Réglementaires
 
 Conformément aux recommandations de l'AMF :
 - Le système affiche un **disclaimer explicite** : "Cet outil est à but éducatif et ne constitue pas un conseil en investissement."
@@ -246,7 +228,7 @@ Conformément aux recommandations de l'AMF :
 
 ---
 
-## 9. Compétences Démontrées
+## 8. Compétences Démontrées
 
 | Compétence du référentiel | Comment elle est démontrée dans ce projet |
 |--------------------------|------------------------------------------|
@@ -258,7 +240,7 @@ Conformément aux recommandations de l'AMF :
 
 ---
 
-## 10. Références
+## 9. Références
 
 - AMF (2025). *Utiliser l'intelligence artificielle pour investir : à quoi faut-il faire attention ?* https://www.amf-france.org
 - Yahoo Finance API (`yfinance`) — https://github.com/ranaroussi/yfinance

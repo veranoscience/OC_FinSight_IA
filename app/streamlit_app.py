@@ -1,5 +1,5 @@
 """
-FinSight — Dashboard Streamlit.
+FinSight — Dashboard Streamlit
 
 Interface utilisateur complète :
   Onglet 1 — Prédiction : tendance J+30, scoring risque, SHAP waterfall
@@ -7,7 +7,6 @@ Interface utilisateur complète :
   Onglet 3 — News       : résumé RAG des actualités récentes
   Onglet 4 — Chatbot    : agent conversationnel FinSight
 
-Lancement : uv run streamlit run app/streamlit_app.py
 """
 
 import sys
@@ -34,7 +33,7 @@ from src.config import (
 )
 from src.data.features import get_feature_names
 
-# ─── Configuration de la page ────────────────────────────────────────────────
+#  Configuration de la page 
 
 st.set_page_config(
     page_title="FinSight — Analyse de Risque",
@@ -43,11 +42,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ─── Chargement des composants (en cache — chargés une seule fois) ───────────
+#  Chargement des composants (en cache — chargés une seule fois) 
 
 @st.cache_resource(show_spinner="Chargement des modèles ML...")
 def load_models():
-    """Charge tous les modèles et scalers en mémoire."""
+    """Charge tous les modèles et scalers en mémoire"""
     from src.models.predict import load_model
     models, scalers = {}, {}
     for ticker in ALL_TICKERS:
@@ -61,7 +60,7 @@ def load_models():
 
 @st.cache_resource(show_spinner="Chargement de l'index RAG...")
 def load_rag():
-    """Charge l'index FAISS et initialise le retriever."""
+    """Charge l'index FAISS et initialise le retriever"""
     from src.rag.ingest import load_faiss_index
     from src.rag.retriever import FinSightRetriever
     try:
@@ -73,7 +72,7 @@ def load_rag():
 
 @st.cache_resource(show_spinner="Initialisation de l'agent...")
 def load_agent():
-    """Initialise l'agent conversationnel."""
+    """Initialise l'agent conversationnel"""
     from src.agent.finsight_agent import FinSightAgent, init_agent_components
     init_agent_components()
     return FinSightAgent()
@@ -81,7 +80,7 @@ def load_agent():
 
 @st.cache_data(show_spinner="Chargement des données historiques...")
 def load_features(ticker: str) -> pd.DataFrame:
-    """Charge la matrice de features depuis data/processed/ (utilisé pour les graphiques)."""
+    """Charge la matrice de features depuis data/processed/ (utilisé pour les graphiques)"""
     path = DATA_PROCESSED_DIR / "features" / f"{ticker.replace('=', '_')}_features.csv"
     if not path.exists():
         return pd.DataFrame()
@@ -91,9 +90,9 @@ def load_features(ticker: str) -> pd.DataFrame:
 @st.cache_data(ttl=3600, show_spinner="Récupération des données en temps réel...")
 def load_live_features(ticker: str) -> pd.DataFrame:
     """
-    Récupère les prix via yfinance et calcule les features sur les 150 derniers jours.
-    Mis en cache 1h pour éviter des appels répétés à yfinance.
-    C'est cette fonction qui fournit les données ACTUELLES pour la prédiction.
+    Récupère les prix via yfinance et calcule les features sur les 150 derniers jours
+    Mis en cache 1h pour éviter des appels répétés à yfinance
+    C'est cette fonction qui fournit les données ACTUELLES pour la prédiction
     """
     from src.data.collector import collect_fred_data, collect_price_data
     from src.data.features import build_feature_matrix
@@ -105,7 +104,6 @@ def load_live_features(ticker: str) -> pd.DataFrame:
     try:
         price_df = collect_price_data(ticker, start_date=start_date, end_date=end_date)
         # Les modèles ont été entraînés avec les 3 features macro FRED
-        # → il faut les inclure ici aussi, sinon le scaler (fitté sur 18 features) plante
         try:
             macro_df = collect_fred_data(start_date=start_date, end_date=end_date)
         except Exception:
@@ -116,7 +114,7 @@ def load_live_features(ticker: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-# ─── Sidebar ─────────────────────────────────────────────────────────────────
+#  Sidebar 
 
 with st.sidebar:
     st.title(" FinSight")
@@ -140,8 +138,8 @@ with st.sidebar:
 
 models, scalers = load_models()
 retriever = load_rag()
-df_feat   = load_features(ticker)      # données historiques CSV → graphiques (Tab 2)
-df_live   = load_live_features(ticker) # données fraîches yfinance → prédiction (Tab 1)
+df_feat   = load_features(ticker)      # données historiques CSV , graphiques (Tab 2)
+df_live   = load_live_features(ticker) # données fraîches yfinance ,  prédiction (Tab 1)
 label     = TICKER_LABELS[ticker]
 
 #  Onglets 
@@ -154,9 +152,8 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 
-# ════════════════════════════════════════════════════════════════
+
 # ONGLET 1 — PRÉDICTION
-# ════════════════════════════════════════════════════════════════
 
 with tab1:
     st.header(f"Projection financière — {label} ({ticker})")
@@ -165,14 +162,14 @@ with tab1:
     model_vol_key   = f"{ticker}_volatility"
 
     if model_trend_key not in models:
-        st.error(f"Modèle non trouvé pour {ticker}. Lance le pipeline d'entraînement.")
+        st.error(f"Modèle non trouvé pour {ticker}. Lance le pipeline d'entraînement")
         st.stop()
 
     if df_live.empty:
-        st.error("Impossible de récupérer les données en temps réel. Vérifiez votre connexion.")
+        st.error("Impossible de récupérer les données en temps réel. Vérifiez votre connexion")
         st.stop()
 
-    # ── Préparation des features live (données d'aujourd'hui) ──
+    #  Préparation des features live (données d'aujourd'hui) 
     feature_cols = get_feature_names(include_macro=True)
     available    = [c for c in feature_cols if c in df_live.columns]
     df_live_clean = df_live[available].dropna()
@@ -201,7 +198,7 @@ with tab1:
     last_price = df_live["Close"].iloc[-1] if "Close" in df_live.columns else None
     last_date  = df_live_clean.index[-1].strftime("%d/%m/%Y")
 
-    # ── Métriques principales ──
+    #  Métriques principales 
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -242,7 +239,7 @@ with tab1:
 
     st.divider()
 
-    # ── Probabilités par classe ──
+    #  Probabilités par classe 
     col_a, col_b = st.columns(2)
 
     with col_a:
@@ -279,7 +276,7 @@ with tab1:
 
     st.divider()
 
-    # ── SHAP Waterfall ──
+    #  SHAP Waterfall 
     st.subheader("Explication SHAP — Pourquoi cette prédiction ?")
     st.caption("Chaque barre montre la contribution d'une feature à la prédiction. "
                "Rouge = pousse vers la classe prédite. Bleu = tire à l'encontre.")
@@ -321,9 +318,7 @@ with tab1:
                 st.error(f"Erreur SHAP : {e}")
 
 
-# ════════════════════════════════════════════════════════════════
 # ONGLET 2 — GRAPHIQUES
-# ════════════════════════════════════════════════════════════════
 
 with tab2:
     st.header(f"Analyse Technique — {label} ({ticker})")
@@ -341,7 +336,7 @@ with tab2:
     period_map = {"6 mois": 126, "1 an": 252, "2 ans": 504, "5 ans": 1260, "Tout": len(df_feat)}
     df_plot = df_feat.iloc[-period_map[period]:]
 
-    # ── Prix + EMA ──
+    #  Prix + EMA  
     st.subheader("Prix de clôture et moyennes mobiles")
     fig_price = go.Figure()
     fig_price.add_trace(go.Scatter(
@@ -362,7 +357,7 @@ with tab2:
                              legend=dict(orientation="h", y=1.02))
     st.plotly_chart(fig_price, use_container_width=True)
 
-    # ── RSI ──
+    #  RSI 
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("RSI (14j)")
@@ -381,7 +376,7 @@ with tab2:
                                   yaxis_range=[0, 100])
             st.plotly_chart(fig_rsi, use_container_width=True)
 
-    # ── MACD ──
+    #  MACD 
     with col2:
         st.subheader("MACD")
         if "macd" in df_plot.columns:
@@ -404,7 +399,7 @@ with tab2:
             fig_macd.update_layout(height=280, margin=dict(t=10, b=10))
             st.plotly_chart(fig_macd, use_container_width=True)
 
-    # ── Bandes de Bollinger ──
+    #  Bandes de Bollinger 
     st.subheader("Bandes de Bollinger (20j, ±2σ)")
     if "bb_pct_b" in df_plot.columns:
         import ta
@@ -433,7 +428,7 @@ with tab2:
                               legend=dict(orientation="h", y=1.02))
         st.plotly_chart(fig_bb, use_container_width=True)
 
-    # ── Volatilité historique ──
+    #  Volatilité historique 
     st.subheader("Volatilité historique (annualisée)")
     col3, col4 = st.columns(2)
     with col3:
@@ -466,9 +461,7 @@ with tab2:
             st.plotly_chart(fig_vol3, use_container_width=True)
 
 
-# ════════════════════════════════════════════════════════════════
 # ONGLET 3 — ACTUALITÉS
-# ════════════════════════════════════════════════════════════════
 
 with tab3:
     st.header(f"Actualités Récentes — {label} ({ticker})")
@@ -521,9 +514,7 @@ with tab3:
                         st.error(f"Erreur : {e}")
 
 
-# ════════════════════════════════════════════════════════════════
 # ONGLET 4 — CHATBOT
-# ════════════════════════════════════════════════════════════════
 
 with tab4:
     st.header(" Agent FinSight")

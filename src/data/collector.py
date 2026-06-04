@@ -1,6 +1,6 @@
 """
-Collecte des données financières et macroéconomiques pour FinSight.
-Sources : yfinance (prix/volumes), FRED (macro), NewsAPI (articles).
+Collecte des données financières et macroéconomiques pour FinSight
+Sources : yfinance (prix/volumes), FRED (macro), NewsAPI (articles)
 """
 
 import logging
@@ -37,7 +37,7 @@ def collect_price_data(
     interval: str = "1d",
 ) -> pd.DataFrame:
     """
-    Collecte les données de prix historiques pour un ticker.
+    Collecte les données de prix historiques pour un ticker
 
     Args:
         ticker: Symbole boursier (ex: 'GC=F', 'MC.PA', 'AAPL')

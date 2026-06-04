@@ -1,11 +1,11 @@
 """
-Explicabilité SHAP pour FinSight.
+Explicabilité SHAP pour FinSight
 
 Deux niveaux d'explication :
   - Global  : comportement général du modèle sur tout le dataset (beeswarm, bar)
   - Local   : pourquoi CETTE prédiction pour CET actif aujourd'hui (waterfall)
 
-Le waterfall local est obligatoire à chaque prédiction (règle projet).
+Le waterfall local est obligatoire à chaque prédiction
 """
 
 import logging
@@ -22,7 +22,7 @@ from src.config import TREND_LABELS, VOLATILITY_LABELS
 logger = logging.getLogger(__name__)
 
 
-# ─── Calcul des valeurs SHAP ─────────────────────────────────────────────────
+#  Calcul des valeurs SHAP 
 
 
 def compute_shap_values(
@@ -82,7 +82,7 @@ def get_shap_for_class(
     return shap_values[:, :, class_idx]
 
 
-# ─── Plots globaux ────────────────────────────────────────────────────────────
+#  Plots globaux 
 
 
 def plot_beeswarm(
@@ -156,7 +156,7 @@ def plot_bar_global(
     return fig
 
 
-# ─── Plot local (prédiction individuelle) ────────────────────────────────────
+#  Plot local (prédiction individuelle) 
 
 
 def plot_waterfall(
@@ -171,7 +171,7 @@ def plot_waterfall(
     """
     Waterfall plot — explication d'une prédiction individuelle.
 
-    C'est le plot obligatoire à chaque prédiction (règle projet).
+    C'est le plot obligatoire à chaque prédiction 
     Il montre, pour une observation précise :
     - La valeur de base (moyenne des prédictions sur le dataset)
     - La contribution de chaque feature (positive = pousse vers cette classe)
@@ -179,9 +179,9 @@ def plot_waterfall(
 
     Exemple de lecture :
       Base = 0.33 (probabilité moyenne de "hausse")
-      + RSI élevé     → +0.12
-      + MACD positif  → +0.08
-      - Volume faible → -0.05
+      + RSI élevé     , +0.12
+      + MACD positif  , +0.08
+      - Volume faible , -0.05
       = Score final   = 0.48 (la classe "hausse" est prédite)
 
     Args:
@@ -218,10 +218,8 @@ def plot_force(
     class_label: str,
 ) -> None:
     """
-    Force plot — version interactive du waterfall (affichage HTML dans Jupyter).
+    Force plot — version interactive du waterfall 
 
-    Nécessite un environnement Jupyter pour s'afficher correctement.
-    Montre les mêmes infos que le waterfall mais sous forme de barre horizontale.
 
     Args:
         shap_values: Explanation multiclasse.
@@ -234,7 +232,7 @@ def plot_force(
     return shap.plots.force(sv_class[sample_idx], show=True)
 
 
-# ─── Pipeline complet d'explication ──────────────────────────────────────────
+#  Pipeline complet d'explication 
 
 
 def explain_prediction(

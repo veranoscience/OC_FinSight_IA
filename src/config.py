@@ -47,8 +47,8 @@ LIVE_LOOKBACK_DAYS = 60
 PREDICTION_HORIZON_DAYS = 30
 
 # Seuils pour la variable cible
-TREND_UP_THRESHOLD = 0.03      # +3% → hausse
-TREND_DOWN_THRESHOLD = -0.03   # -3% → baisse
+TREND_UP_THRESHOLD = 0.03      # +3% , hausse
+TREND_DOWN_THRESHOLD = -0.03   # -3% , baisse
 # Entre les deux → stable
 
 TREND_LABELS = {0: "baisse", 1: "stable", 2: "hausse"}
@@ -89,7 +89,7 @@ FRED_SERIES = {
 # Nombre de splits pour la validation walk-forward
 WF_N_SPLITS = 5
 # Taille minimale du set d'entraînement (en jours)
-WF_MIN_TRAIN_SIZE = 504            # ~2 ans de données quotidiennes
+WF_MIN_TRAIN_SIZE = 504            # 2 ans de données quotidiennes
 
 #  XGBoost — hyperparamètres par défaut 
 

@@ -1,5 +1,5 @@
 """
-Prédictions live pour FinSight.
+Prédictions live pour FinSight
 
 Ce fichier répond à une seule question :
   "Étant donné les données des 60 derniers jours, que va faire cet actif dans 30 jours ?"
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 MODELS_SAVE_DIR = DATA_PROCESSED_DIR / "models"
 
 
-# ─── Sauvegarde / chargement des modèles ─────────────────────────────────────
+#  Sauvegarde / chargement des modèles 
 
 
 def save_model(
@@ -47,7 +47,7 @@ def save_model(
     model_type: str,
 ) -> None:
     """
-    Sauvegarde le modèle et le scaler sur disque.
+    Sauvegarde le modèle et le scaler sur disque
 
     On sauvegarde le scaler séparément du modèle MLflow parce qu'on en a
     besoin ici pour transformer les features live sans refaire de fit.
@@ -107,7 +107,7 @@ def load_model(
     return model, scaler
 
 
-# ─── Prédiction live ──────────────────────────────────────────────────────────
+#  Prédiction live 
 
 
 def predict_live(
@@ -243,7 +243,7 @@ def predict_all_tickers(
     return pd.DataFrame(rows)
 
 
-# ─── Comparaison avec le passé ────────────────────────────────────────────────
+#  Comparaison avec le passé 
 
 
 def evaluate_past_prediction(

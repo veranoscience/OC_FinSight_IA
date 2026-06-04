@@ -19,7 +19,7 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 
-# ─── Helpers ─────────────────────────────────────────────────────────────────
+#  Helpers 
 
 
 def make_dummy_model(n_features: int = 5) -> tuple[XGBClassifier, StandardScaler]:
@@ -43,7 +43,7 @@ def make_dummy_model(n_features: int = 5) -> tuple[XGBClassifier, StandardScaler
     return model, scaler
 
 
-# ─── Tests save/load ─────────────────────────────────────────────────────────
+#  Tests save/load 
 
 
 def test_save_and_load_model_roundtrip():
@@ -76,7 +76,7 @@ def test_load_model_raises_if_missing():
                 load_model("TICKER_INEXISTANT", "trend")
 
 
-# ─── Tests predict_live ───────────────────────────────────────────────────────
+#  Tests predict_live 
 
 
 def _make_price_df(n: int = 80) -> pd.DataFrame:

@@ -26,7 +26,7 @@ from src.data.features import (
 )
 
 
-# ─── Fixtures ────────────────────────────────────────────────────────────────
+#  Fixtures 
 
 
 def make_price_df(n: int = 300) -> pd.DataFrame:
@@ -44,7 +44,7 @@ def make_price_df(n: int = 300) -> pd.DataFrame:
     )
 
 
-# ─── Tests des indicateurs ────────────────────────────────────────────────────
+#  Tests des indicateurs 
 
 
 def test_rsi_column_created():
@@ -102,7 +102,7 @@ def test_historical_volatility_columns():
     assert "volatility_60d" in result.columns
 
 
-# ─── Tests des targets ───────────────────────────────────────────────────────
+#  Tests des targets 
 
 
 def test_trend_target_classes():
@@ -138,7 +138,7 @@ def test_volatility_target_balanced_terciles():
         assert abs(counts.get(cls, 0) - 1 / 3) < 0.10
 
 
-# ─── Test build_feature_matrix ───────────────────────────────────────────────
+#  Test build_feature_matrix 
 
 
 def test_build_feature_matrix_columns():

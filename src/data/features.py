@@ -1,6 +1,6 @@
 """
-Feature engineering pour FinSight.
-Calcule tous les indicateurs techniques et assemble la matrice de features + target.
+Feature engineering pour FinSight
+Calcule tous les indicateurs techniques et assemble la matrice de features + target
 """
 
 import logging
@@ -29,7 +29,7 @@ from src.config import (
 logger = logging.getLogger(__name__)
 
 
-# ─── Indicateurs techniques ───────────────────────────────────────────────────
+#  Indicateurs techniques 
 
 
 def add_rsi(df: pd.DataFrame, window: int = RSI_WINDOW) -> pd.DataFrame:
@@ -187,7 +187,7 @@ def add_historical_volatility(
     return df
 
 
-# ─── Variable cible ───────────────────────────────────────────────────────────
+#  Variable cible 
 
 
 def add_trend_target(
@@ -276,7 +276,7 @@ def add_volatility_target(
     return df
 
 
-# ─── Pipeline complet ─────────────────────────────────────────────────────────
+#  Pipeline complet  
 
 
 def build_feature_matrix(

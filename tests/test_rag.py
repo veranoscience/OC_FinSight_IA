@@ -15,7 +15,7 @@ from src.rag.ingest import build_article_text, chunk_text
 from src.rag.retriever import FinSightRetriever, build_rag_prompt
 
 
-# ─── Tests chunk_text ────────────────────────────────────────────────────────
+#  Tests chunk_text 
 
 
 def test_chunk_text_basic():
@@ -51,7 +51,7 @@ def test_chunk_text_overlap():
         assert end_of_first == start_of_second
 
 
-# ─── Tests build_article_text ────────────────────────────────────────────────
+#  Tests build_article_text 
 
 
 def test_build_article_text_removes_truncation_marker():
@@ -85,7 +85,7 @@ def test_build_article_text_handles_missing_fields():
     assert "Gold falls" in text
 
 
-# ─── Tests build_rag_prompt ──────────────────────────────────────────────────
+#  Tests build_rag_prompt 
 
 
 def test_build_rag_prompt_contains_question():
@@ -112,7 +112,7 @@ def test_build_rag_prompt_includes_chunk_content():
     assert "Apple a annoncé des résultats records." in prompt
 
 
-# ─── Tests FinSightRetriever ─────────────────────────────────────────────────
+#  Tests FinSightRetriever 
 
 
 def make_mock_retriever() -> FinSightRetriever:

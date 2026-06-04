@@ -1,12 +1,11 @@
 """
-Pipeline d'entraînement complet FinSight.
+Pipeline d'entraînement complet FinSight
 
-Ce script orchestre les 3 étapes dans le bon ordre :
+Ce script orchestre les 3 étapes:
   1. Feature engineering — construit la matrice features+target pour chaque actif
   2. Entraînement — walk-forward CV sur chaque ticker (tendance + volatilité)
   3. Sauvegarde — modèle + scaler sur disque pour predict.py
 
-Lancement : uv run python scripts/train_pipeline.py
 """
 
 import logging
@@ -46,9 +45,6 @@ def run_feature_engineering(tickers: list[str]) -> dict[str, pd.DataFrame]:
     - Calcule les 18 features + les 2 variables cibles
     - Sauvegarde le résultat dans data/processed/
 
-    Pourquoi sauvegarder le résultat ?
-    Recalculer les features à chaque fois prendrait du temps.
-    On sauvegarde une fois et on recharge si besoin.
     """
     logger.info("=" * 55)
     logger.info("ÉTAPE 1 — Feature Engineering")
@@ -65,8 +61,6 @@ def run_feature_engineering(tickers: list[str]) -> dict[str, pd.DataFrame]:
         prices = load_raw_prices(ticker)
 
         # Filtre sur la période d'entraînement uniquement (2015-2024)
-        # On garde tout le dataset ici — la séparation train/test se fait
-        # dans walk_forward_splits(), pas ici.
         prices = prices.loc[TRAIN_START_DATE:TEST_END_DATE]
         macro_filtered = macro.loc[TRAIN_START_DATE:TEST_END_DATE]
 
@@ -89,13 +83,13 @@ def run_feature_engineering(tickers: list[str]) -> dict[str, pd.DataFrame]:
 
 def run_training(feature_matrices: dict[str, pd.DataFrame]) -> dict:
     """
-    Étape 2 : entraînement XGBoost (tendance + volatilité) pour chaque ticker.
+    Étape 2 : entraînement XGBoost (tendance + volatilité) pour chaque ticker
 
     Pour chaque ticker on entraîne 2 modèles :
     - Modèle de tendance : prédit hausse / stable / baisse à J+30
     - Modèle de volatilité : prédit niveau de risque faible / moyen / élevé
 
-    Les résultats walk-forward sont collectés pour affichage final.
+    Les résultats walk-forward sont collectés pour affichage final
     """
     logger.info("=" * 55)
     logger.info("ÉTAPE 2 — Entraînement des modèles")
@@ -109,12 +103,12 @@ def run_training(feature_matrices: dict[str, pd.DataFrame]) -> dict:
         logger.info("-" * 40)
         t0 = time.time()
 
-        # --- Modèle tendance ---
+        #  Modèle tendance 
         logger.info("[%s] Modèle TENDANCE...", ticker)
         model_trend, scaler_trend, wf_trend = train_trend_model(df_feat, ticker=ticker)
         save_model(model_trend, scaler_trend, ticker, model_type="trend")
 
-        # --- Modèle volatilité ---
+        #  Modèle volatilité 
         logger.info("[%s] Modèle VOLATILITÉ...", ticker)
         model_vol, scaler_vol, wf_vol = train_volatility_model(df_feat, ticker=ticker)
         save_model(model_vol, scaler_vol, ticker, model_type="volatility")
@@ -132,10 +126,8 @@ def run_training(feature_matrices: dict[str, pd.DataFrame]) -> dict:
 
 def print_summary(all_results: dict) -> None:
     """
-    Étape 3 : affiche un tableau récapitulatif des performances walk-forward.
+    Étape 3 : affiche un tableau récapitulatif des performances walk-forward
 
-    Permet de voir d'un coup d'œil quel actif est le mieux prédit
-    et si le modèle dépasse le baseline DummyClassifier.
     """
     logger.info("=" * 55)
     logger.info("RÉSUMÉ FINAL — Performances Walk-Forward")

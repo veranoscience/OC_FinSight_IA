@@ -36,23 +36,23 @@ FinSight est une plateforme Data Science complète qui analyse des actifs financ
 ```
 finsight/
 ├── app/
-│   └── streamlit_app.py        # Dashboard Streamlit (4 onglets)
+│   └── streamlit_app.py        # Dashboard Streamlit 
 ├── data/
-│   ├── raw/                    # Données brutes (prix, news, macro FRED)
+│   ├── raw/                    # Données brutes 
 │   └── processed/              # Features CSV + modèles sauvegardés + index FAISS
 ├── notebooks/
 │   ├── 01_eda.ipynb            # Analyse exploratoire des données
 │   ├── 02_feature_engineering.ipynb
 │   ├── 03_modeling.ipynb       # Walk-forward, baseline, GridSearch
 │   ├── 04_shap_explainability.ipynb
-│   └── 05_rag_pipeline.ipynb   # Ingestion news → FAISS → RAG
+│   └── 05_rag_pipeline.ipynb   # Ingestion news -> FAISS -> RAG
 ├── scripts/
 │   └── train_pipeline.py       # Pipeline complet feature engineering + entraînement
 ├── src/
-│   ├── config.py               # Toutes les constantes du projet
+│   ├── config.py               
 │   ├── data/
 │   │   ├── collector.py        # yfinance + FRED API + NewsAPI
-│   │   └── features.py         # RSI, MACD, Bollinger, EMA, volatilité...
+│   │   └── features.py         
 │   ├── models/
 │   │   ├── train.py            # Walk-forward CV + XGBoost + MLflow
 │   │   ├── evaluate.py         # F1, ROC, matrice de confusion
@@ -64,8 +64,8 @@ finsight/
 │   │   └── retriever.py        # Recherche sémantique + génération RAG
 │   └── agent/
 │       └── finsight_agent.py   # Agent Mistral (tool calling natif)
-├── tests/                      # 42 tests pytest
-├── mlflow/                     # Tracking des expériences MLflow
+├── tests/                     
+├── mlflow/                  
 └── pyproject.toml
 ```
 
@@ -164,23 +164,9 @@ La validation temporelle est au cœur du projet. On ne mélange jamais passé et
 
 - **Données d'entraînement** : 2015–2022
 - **Données de test** : 2023–2024 (5 splits walk-forward)
-- **Taille minimale du train** : 504 jours (~2 ans)
+- **Taille minimale du train** : 504 jours (2 ans)
 
-### Résultats (F1-score pondéré moyen, walk-forward)
-
-| Actif | Tendance J+30 | Volatilité |
-|-------|:---:|:---:|
-| LVMH (MC.PA) | 0.255 | 0.377 |
-| TotalEnergies (TTE.PA) | 0.330 | 0.360 |
-| Apple (AAPL) | 0.294 | 0.357 |
-| Microsoft (MSFT) | 0.330 | 0.245 |
-| Or (GC=F) | 0.362 | 0.416 |
-| Argent (SI=F) | 0.326 | 0.466 |
-| Platine (PL=F) | 0.405 | 0.406 |
-
-> Ces scores surpassent systématiquement le DummyClassifier (baseline `most_frequent` ≈ 0.18).
-
-### Features utilisées (18 au total)
+### Features utilisées 
 
 **Indicateurs techniques (15)** : RSI-14, MACD, signal MACD, histogramme MACD, Bollinger %B, Bollinger width, EMA-20, EMA-50, croisement EMA, volume relatif, rendements 1j/5j/20j, volatilité historique 20j/60j.
 
@@ -193,10 +179,10 @@ La validation temporelle est au cœur du projet. On ne mélange jamais passé et
 Les actualités financières des 7 derniers jours sont indexées dans FAISS pour permettre une recherche sémantique :
 
 ```
-NewsAPI → texte brut → chunking (800 chars, overlap 100)
-       → embeddings (all-MiniLM-L6-v2, dim=384)
-       → FAISS IndexFlatIP (cosine similarity)
-       → Retrieval top-5 → Mistral (génération RAG)
+NewsAPI -> texte brut -> chunking (800 chars, overlap 100)
+       -> embeddings (all-MiniLM-L6-v2, dim=384)
+       -> FAISS IndexFlatIP (cosine similarity)
+       -> Retrieval top-5 -> Mistral (génération RAG)
 ```
 
 ---

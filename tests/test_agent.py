@@ -1,5 +1,5 @@
 """
-Tests unitaires — Agent FinSight.
+Tests unitaires — Agent FinSight
 
 On teste les tool functions isolément, sans appel API réel :
   - _predict_asset : retourne la bonne structure
@@ -13,7 +13,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
-# ─── Tests _predict_asset ─────────────────────────────────────────────────────
+#  Tests _predict_asset 
 
 
 def test_predict_asset_unknown_ticker():
@@ -66,7 +66,7 @@ def test_predict_asset_handles_error():
     assert "erreur" in result.lower() or "error" in result.lower()
 
 
-# ─── Tests _search_news ───────────────────────────────────────────────────────
+#  Tests _search_news 
 
 
 def test_search_news_no_retriever():
@@ -103,7 +103,7 @@ def test_search_news_calls_generate_rag_response():
     assert "Apple a annoncé" in result
 
 
-# ─── Tests FinSightAgent (historique) ────────────────────────────────────────
+#  Tests FinSightAgent (historique) 
 
 
 def test_agent_history_grows():

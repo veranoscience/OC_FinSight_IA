@@ -1,5 +1,5 @@
 """
-Agent conversationnel FinSight — Mistral tool calling natif.
+Agent conversationnel FinSight — Mistral tool calling natif
 
 L'agent dispose de 3 outils et décide lui-même lequel appeler
 selon la question de l'utilisateur :
@@ -8,10 +8,6 @@ selon la question de l'utilisateur :
   Tool 2 — search_news     : recherche sémantique dans les news (RAG)
   Tool 3 — market_summary  : rapport complet sur un actif (ML + news)
 
-Pourquoi l'API Mistral directement plutôt que LangChain Agents ?
-  LangChain Agents subit des changements d'API majeurs entre versions.
-  L'API Mistral supporte nativement le tool calling — plus stable,
-  plus lisible, et sans couche d'abstraction inutile pour ce projet.
 """
 
 import json
@@ -27,7 +23,7 @@ from src.config import ALL_TICKERS, DISCLAIMER_AMF, TICKER_LABELS
 load_dotenv()
 logger = logging.getLogger(__name__)
 
-# ─── Définitions des outils (format JSON Schema pour Mistral) ────────────────
+#  Définitions des outils (format JSON Schema pour Mistral) 
 
 TOOLS_SCHEMA = [
     {
@@ -108,15 +104,15 @@ Si l'utilisateur mentionne un actif non disponible, propose les alternatives.
 {DISCLAIMER_AMF}"""
 
 
-# ─── Initialisation des composants partagés ───────────────────────────────────
+#  Initialisation des composants partagés 
 
 _components: dict[str, Any] = {}
 
 
 def init_agent_components() -> None:
     """
-    Charge les modèles ML et le retriever RAG en mémoire.
-    À appeler une seule fois au démarrage de l'application.
+    Charge les modèles ML et le retriever RAG en mémoire
+    À appeler une seule fois au démarrage de l'application
     """
     from src.models.predict import load_model
     from src.rag.ingest import load_faiss_index
@@ -148,11 +144,11 @@ def init_agent_components() -> None:
     logger.info("Agent prêt — %d modèles, %d chunks RAG", len(models_trend), len(chunks))
 
 
-# ─── Implémentation des outils ────────────────────────────────────────────────
+#  Implémentation des outils 
 
 
 def _predict_asset(ticker: str) -> str:
-    """Appelle predict_live pour les deux modèles et formate la réponse."""
+    """Appelle predict_live pour les deux modèles et formate la réponse"""
     ticker = ticker.strip().upper()
 
     if ticker not in _components.get("models_trend", {}):
@@ -182,10 +178,10 @@ def _predict_asset(ticker: str) -> str:
 
 
 def _search_news(query: str, ticker: str = "") -> str:
-    """Recherche dans FAISS et génère une réponse RAG avec Mistral."""
+    """Recherche dans FAISS et génère une réponse RAG avec Mistral"""
     retriever = _components.get("retriever")
     if retriever is None:
-        return "RAG non initialisé. Appelez init_agent_components()."
+        return "RAG non initialisé. Appelez init_agent_components()"
 
     ticker_filter = ticker.strip().upper() if ticker else None
     if ticker_filter and ticker_filter not in TICKER_LABELS:
@@ -210,7 +206,7 @@ def _search_news(query: str, ticker: str = "") -> str:
 
 
 def _market_summary(ticker: str) -> str:
-    """Combine prédiction ML et résumé news pour un actif."""
+    """Combine prédiction ML et résumé news pour un actif"""
     ticker = ticker.strip().upper()
     label  = TICKER_LABELS.get(ticker, ticker)
 
@@ -235,7 +231,7 @@ def _market_summary(ticker: str) -> str:
     )
 
 
-# Registre des fonctions — associe nom de tool → fonction Python
+# Registre des fonctions — associe nom de tool , fonction Python
 TOOL_FUNCTIONS = {
     "predict_asset":  _predict_asset,
     "search_news":    _search_news,
@@ -243,21 +239,18 @@ TOOL_FUNCTIONS = {
 }
 
 
-# ─── Boucle agent (ReAct loop manuelle) ──────────────────────────────────────
+#  Boucle agent (ReAct loop manuelle) 
 
 
 class FinSightAgent:
     """
-    Agent conversationnel avec mémoire de conversation et tool calling Mistral.
+    Agent conversationnel avec mémoire de conversation et tool calling Mistral
 
     À chaque tour :
     1. Envoie le message + historique à Mistral
-    2. Si Mistral demande un tool → l'exécute et renvoie le résultat
+    2. Si Mistral demande un tool , l'exécute et renvoie le résultat
     3. Mistral génère la réponse finale à partir du résultat du tool
 
-    Attributes:
-        client: Client Mistral API.
-        history: Historique de la conversation (liste de messages).
     """
 
     def __init__(self) -> None:
@@ -269,14 +262,14 @@ class FinSightAgent:
 
     def chat(self, user_message: str, max_tool_calls: int = 3) -> str:
         """
-        Envoie un message et retourne la réponse de l'agent.
+        Envoie un message et retourne la réponse de l'agent
 
         Args:
             user_message: Message de l'utilisateur en langage naturel.
             max_tool_calls: Nombre maximum de tools appelés par tour (sécurité anti-boucle).
 
         Returns:
-            Réponse textuelle de l'agent.
+            Réponse textuelle de l'agent
         """
         self.history.append({"role": "user", "content": user_message})
 
@@ -294,7 +287,7 @@ class FinSightAgent:
 
             msg = response.choices[0].message
 
-            # Pas d'appel de tool → réponse finale
+            # Pas d'appel de tool , réponse finale
             if not msg.tool_calls:
                 answer = msg.content
                 self.history.append({"role": "assistant", "content": answer})
