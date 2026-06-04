@@ -1,7 +1,7 @@
 # Rapport de Conduite de Projet Data
 ## Stock Market Analyst — Plateforme de Prédiction & Analyse de Risque
 
-**Auteure :** [Ksenia DAUTEL]
+**Auteure :** Ksenia DAUTEL
 **Formation :** Data Scientist Machine Learning
 **Date :** Mai 2026
 **Statut :** Projet de fin d'études — Portfolio Personnel
