@@ -42,7 +42,16 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-#  Chargement des composants (en cache — chargés une seule fois) 
+st.markdown("""
+<style>
+    html, body, [class*="css"] { font-size: 18px; }
+    p, .stMarkdown, label      { font-size: 18px !important; }
+    .stTabs [data-baseweb="tab"] { font-size: 16px; }
+    .stDataFrame               { font-size: 16px; }
+</style>
+""", unsafe_allow_html=True)
+
+#  Chargement des composants (en cache — chargés une seule fois)
 
 @st.cache_resource(show_spinner="Chargement des modèles ML...")
 def load_models():
