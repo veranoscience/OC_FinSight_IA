@@ -9,10 +9,13 @@ Interface utilisateur complète :
 
 """
 
+import logging
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+logger = logging.getLogger(__name__)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -120,6 +123,7 @@ def load_live_features(ticker: str) -> pd.DataFrame:
         feat_df = build_feature_matrix(price_df, macro_df=macro_df, add_targets=False)
         return feat_df
     except Exception:
+        logger.exception("Échec de récupération des données live pour %s", ticker)
         return pd.DataFrame()
 
 
